@@ -3,82 +3,191 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Password Generator v2</title>
+    <title>Password Generator v3</title>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
+            min-height: 100vh;
+            background: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+            padding: 20px;
         }
         .container {
-            background-color: white;
+            background-color: rgba(255, 255, 255, 0.9);
             padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            width: 350px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            max-width: 100%;
+            transition: all 0.3s ease;
+        }
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
         }
         h1 {
-            margin-top: 0;
             color: #333;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 2rem;
         }
         .options {
+            margin-bottom: 1.5rem;
+        }
+        .option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 1rem;
+        }
+        label {
+            font-weight: 500;
+            color: #555;
         }
         input[type="number"] {
             width: 60px;
-        }
-        #password {
-            margin-top: 1rem;
-            font-size: 1.2rem;
-            word-break: break-all;
-            padding: 10px;
-            background-color: #f9f9f9;
+            padding: 5px;
+            border: 1px solid #ddd;
             border-radius: 5px;
+            font-size: 1rem;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+        input:checked + .slider:before {
+            transform: translateX(26px);
         }
         button {
             background-color: #4CAF50;
             color: white;
             border: none;
             padding: 10px 15px;
-            margin: 5px 0;
+            margin: 10px 0;
             border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, transform 0.1s;
+            font-size: 1rem;
+            width: 100%;
         }
         button:hover {
             background-color: #45a049;
         }
+        button:active {
+            transform: scale(0.98);
+        }
+        #password {
+            margin-top: 1rem;
+            font-size: 1.2rem;
+            word-break: break-all;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
         #strength {
-            margin-top: 10px;
+            margin-top: 15px;
             font-weight: bold;
+            text-align: center;
+        }
+        .strength-meter {
+            height: 10px;
+            background-color: #ddd;
+            border-radius: 5px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        .strength-meter-fill {
+            height: 100%;
+            width: 0;
+            transition: width 0.5s ease-in-out, background-color 0.5s ease-in-out;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Password Generator v2</h1>
+        <h1>Password Generator</h1>
         <div class="options">
-            <label for="length">Length:</label>
-            <input type="number" id="length" min="4" max="50" value="12">
-            <br>
-            <input type="checkbox" id="uppercase" checked>
-            <label for="uppercase">Uppercase</label>
-            <input type="checkbox" id="lowercase" checked>
-            <label for="lowercase">Lowercase</label>
-            <br>
-            <input type="checkbox" id="numbers" checked>
-            <label for="numbers">Numbers</label>
-            <input type="checkbox" id="symbols" checked>
-            <label for="symbols">Symbols</label>
+            <div class="option">
+                <label for="length">Length:</label>
+                <input type="number" id="length" min="4" max="50" value="12">
+            </div>
+            <div class="option">
+                <label for="uppercase">Uppercase</label>
+                <label class="switch">
+                    <input type="checkbox" id="uppercase" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="option">
+                <label for="lowercase">Lowercase</label>
+                <label class="switch">
+                    <input type="checkbox" id="lowercase" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="option">
+                <label for="numbers">Numbers</label>
+                <label class="switch">
+                    <input type="checkbox" id="numbers" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="option">
+                <label for="symbols">Symbols</label>
+                <label class="switch">
+                    <input type="checkbox" id="symbols" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
         </div>
         <button onclick="generatePassword()">Generate Password</button>
         <button onclick="copyToClipboard()">Copy to Clipboard</button>
         <div id="password"></div>
         <div id="strength"></div>
+        <div class="strength-meter">
+            <div class="strength-meter-fill"></div>
+        </div>
     </div>
 
     <script>
@@ -122,6 +231,7 @@
 
         function checkStrength(password) {
             const strengthElement = document.getElementById('strength');
+            const strengthMeterFill = document.querySelector('.strength-meter-fill');
             const length = password.length;
             const hasUppercase = /[A-Z]/.test(password);
             const hasLowercase = /[a-z]/.test(password);
@@ -144,25 +254,27 @@
                 case 1:
                 case 2:
                     strengthText = "Weak";
-                    color = "red";
+                    color = "#ff4d4d";
                     break;
                 case 3:
                 case 4:
                     strengthText = "Moderate";
-                    color = "orange";
+                    color = "#ffa64d";
                     break;
                 case 5:
                     strengthText = "Strong";
-                    color = "green";
+                    color = "#4dff4d";
                     break;
                 case 6:
                     strengthText = "Very Strong";
-                    color = "darkgreen";
+                    color = "#1a8cff";
                     break;
             }
 
             strengthElement.textContent = `Strength: ${strengthText}`;
             strengthElement.style.color = color;
+            strengthMeterFill.style.width = `${(strength / 6) * 100}%`;
+            strengthMeterFill.style.backgroundColor = color;
         }
     </script>
 </body>
